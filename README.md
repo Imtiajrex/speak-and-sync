@@ -105,6 +105,30 @@ Set `VITE_OPENROUTER_MODEL` to any supported OpenRouter model slug (e.g. `openai
 - Malformed / non-JSON output -> error triggers fallback.
 - Network / rate limit issues -> same fallback path.
 
+## Device Control Calls
+
+After a command is parsed, the hook will attempt to call a local device endpoint constructed as:
+
+```
+<VITE_DEVICE_API_BASE>/<Item>/<State>
+```
+
+Defaults (if env not set): `VITE_DEVICE_API_BASE = http://192.168.0.3:8000`
+
+Transformation rules:
+
+- Spaces in `item` or `state` become `-`.
+- Raw values used (case preserved for state except spaces removed).
+- Example: `Lights` + `off` -> `http://192.168.0.3:8000/Lights/off`
+
+Configure in `.env`:
+
+```
+VITE_DEVICE_API_BASE=http://192.168.0.3:8000
+```
+
+Failures in the fetch will surface a destructive toast but won't abort command parsing.
+
 ## How can I deploy this project?
 
 Simply open [Lovable](https://lovable.dev/projects/9b554f1b-db5c-442b-9cb5-4c52ccb0fd85) and click on Share -> Publish.
