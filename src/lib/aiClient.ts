@@ -19,6 +19,7 @@ function getClient(): OpenAI | null {
 		client = new OpenAI({
 			apiKey: key,
 			baseURL: "https://openrouter.ai/api/v1",
+			dangerouslyAllowBrowser: true,
 		});
 	}
 	return client;
@@ -46,7 +47,7 @@ export async function parseVoiceCommand(
 
 	// Using responses API for model-agnostic interface
 	const model =
-		import.meta.env.VITE_OPENROUTER_MODEL || "anthropic/claude-3.5-sonnet";
+		import.meta.env.VITE_OPENROUTER_MODEL || "deepseek/deepseek-r1-0528:free";
 	try {
 		const response = await api.chat.completions.create({
 			model,

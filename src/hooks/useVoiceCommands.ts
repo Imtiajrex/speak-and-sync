@@ -29,6 +29,7 @@ export const useVoiceCommands = () => {
 		});
 
 		try {
+			console.log(import.meta.env.VITE_OPENROUTER_KEY);
 			const hasKey = Boolean(import.meta.env.VITE_OPENROUTER_KEY);
 			let response: ParsedCommand;
 			if (hasKey) {
