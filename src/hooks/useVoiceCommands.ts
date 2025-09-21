@@ -52,6 +52,41 @@ export const useVoiceCommands = () => {
 				parsedCommand: response,
 			});
 
+			// After successful parsing, attempt to call the device endpoint
+			try {
+				const base =
+					import.meta.env.VITE_DEVICE_API_BASE || "http://192.168.0.3:8000";
+				// Normalize item/state for path (remove spaces, capitalize words joined by '-')
+				const pathItem = response.item.replace(/\s+/g, "-");
+				// Keep state as-is but capitalize first letter for consistency in path
+				const pathState = response.state.replace(/\s+/g, "-");
+				const url = `${base.replace(/\/$/, "")}/${encodeURIComponent(
+					pathItem
+				)}/${encodeURIComponent(pathState)}`;
+				fetch(url)
+					.then((res) => {
+						if (!res.ok) throw new Error(`Device call failed (${res.status})`);
+						return res.text();
+					})
+					.then((body) => {
+						console.log("Device response:", body);
+						toast({
+							title: "Device Updated",
+							description: `${response.item} -> ${response.state}`,
+						});
+					})
+					.catch((err) => {
+						console.warn("Device call error:", err);
+						toast({
+							title: "Device Call Failed",
+							description: String(err.message || err),
+							variant: "destructive",
+						});
+					});
+			} catch (deviceErr) {
+				console.warn("Device call setup error:", deviceErr);
+			}
+
 			toast({
 				title: "Command Processed",
 				description: `${response.item} → ${response.state}`,
