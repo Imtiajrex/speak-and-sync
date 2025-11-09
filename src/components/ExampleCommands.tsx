@@ -6,19 +6,19 @@ export const ExampleCommands = () => {
 			<h3 className="text-lg font-semibold mb-4">Try These Voice Commands</h3>
 			<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 				<div className="space-y-2">
-					<h4 className="font-medium text-primary">Lighting Control</h4>
+					<h4 className="font-medium text-primary">LED Control</h4>
 					<ul className="text-sm text-muted-foreground space-y-1">
-						<li>"Turn on the front light"</li>
-						<li>"Turn off the bedroom ceiling fan"</li>
-						<li>"Start the smart TV"</li>
+						<li>"Turn on LED1"</li>
+						<li>"Turn off LED2"</li>
+						<li>"Turn on LED3"</li>
 					</ul>
 				</div>
 				<div className="space-y-2">
-					<h4 className="font-medium text-primary">Temperature & Security</h4>
+					<h4 className="font-medium text-primary">Multiple LEDs</h4>
 					<ul className="text-sm text-muted-foreground space-y-1">
-						<li>"Set thermostat to 72 degrees"</li>
-						<li>"Lock the front door"</li>
-						<li>"Play music on smart speaker"</li>
+						<li>"Turn on all LEDs"</li>
+						<li>"Turn off LED1 and LED3"</li>
+						<li>"Toggle LED2"</li>
 					</ul>
 				</div>
 			</div>

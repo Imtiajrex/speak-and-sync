@@ -47,14 +47,12 @@ export const useVoiceCommands = () => {
 			// After successful parsing, attempt to call the device endpoint
 			try {
 				const base =
-					import.meta.env.VITE_DEVICE_API_BASE || "http://192.168.0.3:8000";
-				// Normalize item/state for path (remove spaces, capitalize words joined by '-')
-				const pathItem = response.item.replace(/\s+/g, "-");
-				// Keep state as-is but capitalize first letter for consistency in path
-				const pathState = response.state.replace(/\s+/g, "-");
-				const url = `${base.replace(/\/$/, "")}/${encodeURIComponent(
-					pathItem
-				)}/${encodeURIComponent(pathState)}`;
+					import.meta.env.VITE_DEVICE_API_BASE || "http://192.168.237.74";
+				console.log(response);
+				// Format: /LED1=ON or /LED2=OFF
+				const deviceName = response.item.toUpperCase();
+				const deviceState = response.state.toUpperCase();
+				const url = `${base.replace(/\/$/, "")}/${deviceName}=${deviceState}`;
 				fetch(url)
 					.then((res) => {
 						if (!res.ok) throw new Error(`Device call failed (${res.status})`);
@@ -69,11 +67,11 @@ export const useVoiceCommands = () => {
 					})
 					.catch((err) => {
 						console.warn("Device call error:", err);
-						toast({
-							title: "Device Call Failed",
-							description: String(err.message || err),
-							variant: "destructive",
-						});
+						// toast({
+						// 	title: "Device Call Failed",
+						// 	description: String(err.message || err),
+						// 	variant: "destructive",
+						// });
 					});
 			} catch (deviceErr) {
 				console.warn("Device call setup error:", deviceErr);

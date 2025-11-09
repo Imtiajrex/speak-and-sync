@@ -27,14 +27,9 @@ function getClient(): OpenAI | null {
 
 // Available devices in the smart home system
 const AVAILABLE_DEVICES = [
-	{ name: "Front Light", type: "light", room: "Living Room" },
-	{ name: "Thermostat", type: "climate", room: "Living Room" },
-	{ name: "Front Door", type: "lock", room: "Entrance" },
-	{ name: "Ceiling Fan", type: "fan", room: "Bedroom" },
-	{ name: "Smart TV", type: "entertainment", room: "Living Room" },
-	{ name: "Smart Speaker", type: "audio", room: "Kitchen" },
-	{ name: "Security System", type: "security", room: "House" },
-	{ name: "WiFi Router", type: "network", room: "Office" },
+	{ name: "LED1", type: "light", room: "Main" },
+	{ name: "LED2", type: "light", room: "Main" },
+	{ name: "LED3", type: "light", room: "Main" },
 ];
 
 // System prompt engineered to extract a JSON command from natural language.
@@ -55,10 +50,9 @@ Rules:
 
 Return ONLY JSON. No markdown, no explanation.
 Examples:
-Input: "Turn on the front light" -> {"item":"Front Light","state":"on","room":"Living Room","confidence":0.9}
-Input: "set thermostat to 72" -> {"item":"Thermostat","state":"72°F","confidence":0.85}
-Input: "lock the front door" -> {"item":"Front Door","state":"locked","confidence":0.9}
-Input: "turn on the ceiling fan" -> {"item":"Ceiling Fan","state":"on","room":"Bedroom","confidence":0.9}
+Input: "Turn on LED1" -> {"item":"LED1","state":"on","confidence":0.9}
+Input: "Turn off LED2" -> {"item":"LED2","state":"off","confidence":0.9}
+Input: "Turn on LED3" -> {"item":"LED3","state":"on","confidence":0.9}
 `;
 
 export async function parseVoiceCommand(
@@ -68,8 +62,7 @@ export async function parseVoiceCommand(
 	if (!api) throw new Error("Missing OpenRouter key (VITE_OPENROUTER_KEY).");
 
 	// Using Gemini 2.0 Flash via OpenRouter
-	const model =
-		import.meta.env.VITE_OPENROUTER_MODEL || "deepseek/deepseek-r1-0528:free";
+	const model = import.meta.env.VITE_OPENROUTER_MODEL || "openai/gpt-4o";
 
 	try {
 		const response = await api.chat.completions.create({
@@ -90,6 +83,7 @@ export async function parseVoiceCommand(
 		if (!jsonMatch) throw new Error("No JSON object found in AI output");
 		const parsed = JSON.parse(jsonMatch[0]);
 
+		console.log("AI Parsed JSON:", parsed);
 		// Basic validation / normalization
 		if (!parsed.item || !parsed.state)
 			throw new Error("AI JSON missing required fields");
